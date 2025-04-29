@@ -34,6 +34,18 @@ class ChatClient:
         self.root.geometry("750x700")
         self.root.configure(bg=self.bg_color)
 
+        # اسم المستخدم أعلى النافذة
+        self.user_label = tk.Label(
+            self.root,
+            text="اسم المستخدم: ...",  # سيتم تحديثه لاحقًا
+            font=self.font_main,
+            bg=self.bg_color,
+            fg="#006064",
+            anchor="e",
+            pady=5
+        )
+        self.user_label.pack(fill="x", padx=10)
+
         # Header
         self.header = tk.Label(
             self.root,
@@ -93,6 +105,8 @@ class ChatClient:
             if not username:
                 username = "مجهول"
             self.username = username
+            # تحديث اسم المستخدم أعلى النافذة
+            self.user_label.config(text=f"اسم المستخدم: {self.username}")
             self.client_socket.send(username.encode('utf-8'))
             threading.Thread(target=self.receive_messages, daemon=True).start()
         except Exception as e:
@@ -116,7 +130,9 @@ class ChatClient:
         if ":" in message:
             sender, msg_text = message.split(":", 1)
             sender = sender.strip()
-            bubble = f"{sender}:\n{msg_text.strip()} ({time_now})\n\n"
+            # اسم المرسل في سطر منفصل وبخط أوضح
+            self.chat_area.insert('end', f"{sender}\n", "sender_name")
+            bubble = f"{msg_text.strip()} ({time_now})\n\n"
             tag = "self_msg" if sender == self.username else "others_msg"
             self.chat_area.insert('end', bubble, tag)
         else:
@@ -131,6 +147,12 @@ class ChatClient:
             background="#fff3e0",
             justify='center',
             font=("Cairo", 10, "italic")
+        )
+        self.chat_area.tag_config(
+            "sender_name",
+            font=("Cairo", 11, "bold"),
+            foreground="#00838f",
+            justify='right'
         )
         self.chat_area.config(state='disabled')
         self.chat_area.see('end')
