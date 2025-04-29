@@ -31,7 +31,7 @@ class ChatClient:
 
     def setup_gui(self):
         self.root.title("🌟 دردشة جماعية")
-        self.root.geometry("750x700")
+        self.root.geometry("600x600")
         self.root.configure(bg=self.bg_color)
 
         # اسم المستخدم أعلى النافذة
