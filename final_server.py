@@ -1,7 +1,7 @@
 import socket
 import threading
 
-clients = []
+clients = []      # قائمة لتخزين جميع عملاء الدردشة
 
 def handle_client(client_socket, addr):
     try:
